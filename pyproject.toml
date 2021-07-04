@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "logcosh"
+name = "rethinking-dropout"
 version = "0.1.0"
 description = ""
 authors = ["Ivan Valles Perez <ivanvallesperez@gmail.com>"]
