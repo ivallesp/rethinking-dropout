@@ -1,0 +1,27 @@
+# Vscode
+.vscode
+
+# Virtual environment
+.venv
+
+# Notebooks folder
+notebooks
+
+# Python garbage
+*.pyc
+
+# Models path
+models
+model
+models_*
+
+# Data path
+data
+
+# Tensorboard logs path
+tensorboard_logs
+
+# Misc folders
+docs
+exported_summaries
+notebooks
