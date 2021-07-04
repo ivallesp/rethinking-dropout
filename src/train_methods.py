@@ -47,7 +47,7 @@ def step(net, criterion, optimizer, inputs, target):
         target=target,
     )
     # Train step with inverted dropout
-    net.invert_mask()
+    net.invert_masks()
     loss = train_step(
         net=net,
         criterion=criterion,
@@ -70,7 +70,7 @@ def distillation(net, criterion, optimizer, inputs, target):
     )
     # Train step with inverted dropout
     soft_target = net(inputs, mask=True).detach()
-    net.invert_mask()
+    net.invert_masks()
     loss = train_step(
         net=net,
         criterion=criterion,
