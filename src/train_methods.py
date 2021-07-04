@@ -1,6 +1,7 @@
 import inspect
 import sys
 from src.model_tools import train_step
+import torch.nn.functional as F
 
 
 def get_training_method(name):
@@ -61,15 +62,18 @@ def step(net, criterion, optimizer, inputs, target):
 
 def distillation(net, criterion, optimizer, inputs, target):
     # Train step with dropout
-    loss = regular(
+    net.reset_masks()
+    loss = train_step(
         net=net,
         criterion=criterion,
         optimizer=optimizer,
         inputs=inputs,
         target=target,
+        mask=True,
     )
     # Train step with inverted dropout
     soft_target = net(inputs, mask=True).detach()
+    soft_target = F.softmax(soft_target, dim=1)
     net.invert_masks()
     loss = train_step(
         net=net,
@@ -84,15 +88,18 @@ def distillation(net, criterion, optimizer, inputs, target):
 
 def fulldistillation(net, criterion, optimizer, inputs, target):
     # Train step with dropout
-    loss = regular(
+    net.reset_masks()
+    loss = train_step(
         net=net,
         criterion=criterion,
         optimizer=optimizer,
         inputs=inputs,
         target=target,
+        mask=True,
     )
     # Train step with inverted dropout
     soft_target = net(inputs, mask=True).detach()
+    soft_target = F.softmax(soft_target, dim=1)
     loss = train_step(
         net=net,
         criterion=criterion,
