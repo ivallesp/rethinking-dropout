@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "rethinking-dropout"
+name = "rethinking_dropout"
 version = "0.1.0"
 description = ""
 authors = ["Ivan Valles Perez <ivanvallesperez@gmail.com>"]
