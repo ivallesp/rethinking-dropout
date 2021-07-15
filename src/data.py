@@ -1,6 +1,6 @@
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10, CIFAR100, MNIST
+from torchvision.datasets import CIFAR10, CIFAR100, MNIST, FashionMNIST
 from src.constants import CIFAR10_CLASSES, CIFAR100_CLASSES
 import inspect
 import sys
@@ -91,6 +91,31 @@ def mnist(batch_size_train=32, batch_size_test=128, n_workers=8):
     )
 
     testset = MNIST(root="./data", train=False, download=True, transform=transform)
+    testloader = DataLoader(
+        testset, batch_size=batch_size_test, shuffle=False, num_workers=n_workers
+    )
+
+    return trainloader, testloader, classes, input_size, input_channels
+
+
+def fmnist(batch_size_train=32, batch_size_test=128, n_workers=8):
+    input_size = 28
+    input_channels = 1
+    classes = list(range(10))
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.5), (0.5))]
+    )
+
+    trainset = FashionMNIST(
+        root="./data", train=True, download=True, transform=transform
+    )
+    trainloader = DataLoader(
+        trainset, batch_size=batch_size_train, shuffle=True, num_workers=n_workers
+    )
+
+    testset = FashionMNIST(
+        root="./data", train=False, download=True, transform=transform
+    )
     testloader = DataLoader(
         testset, batch_size=batch_size_test, shuffle=False, num_workers=n_workers
     )
