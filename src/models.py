@@ -229,3 +229,4 @@ class FC(ModelProto):
         h = self.mask_fc(h, 1) if mask else h
         h = self.fc3(h)
         return h
+

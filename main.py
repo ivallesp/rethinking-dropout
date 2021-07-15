@@ -13,6 +13,7 @@ TRAINING_METHODS = [
     "step",
     "distillation",
     "fulldistillation",
+    "fulldistillation_reset",
 ]
 
 KEEP_PROB_LEVELS = [0.8, 0.5, 0.3]
