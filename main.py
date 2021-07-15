@@ -58,13 +58,15 @@ def main():
 
     # Generate experiments
     experiments = []
-    for training_method in TRAINING_METHODS:
-        for keep_prob_level in KEEP_PROB_LEVELS:
-            experiments.append((training_method, keep_prob_level))
 
     # Append the baseline (No dropout)
-    experiments.append(("regular", 1.0))
-    for i, (training_method, keep_prob_level) in enumerate(experiments):
+    experiments.append((1.0, "regular"))
+
+    for keep_prob_level in KEEP_PROB_LEVELS:
+        for training_method in TRAINING_METHODS:
+            experiments.append((keep_prob_level, training_method))
+
+    for i, (keep_prob_level, training_method) in enumerate(experiments):
         alias = f"{dataset_name}_{model_name}_{training_method}_{keep_prob_level}_{random_seed}"
 
         model_folder = get_model_folder(alias)
