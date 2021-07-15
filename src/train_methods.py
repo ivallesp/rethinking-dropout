@@ -71,7 +71,7 @@ def distillation(net, criterion, optimizer, inputs, target):
         target=target,
         mask=True,
     )
-    # Train step with inverted dropout
+    # Train step with inverted dropout on distilled target
     soft_target = net(inputs, mask=True).detach()
     soft_target = F.softmax(soft_target, dim=1)
     net.invert_masks()
@@ -97,7 +97,7 @@ def fulldistillation(net, criterion, optimizer, inputs, target):
         target=target,
         mask=True,
     )
-    # Train step with inverted dropout
+    # Train step without dropout on distilled target
     soft_target = net(inputs, mask=True).detach()
     soft_target = F.softmax(soft_target, dim=1)
     loss = train_step(
@@ -109,3 +109,35 @@ def fulldistillation(net, criterion, optimizer, inputs, target):
         mask=False,
     )
     return loss
+
+
+def fulldistillation_reset(net, criterion, optimizer, inputs, target):
+    # Train step with dropout
+    net.reset_masks()
+    state_dict = net.state_dict()
+    opt_state_dict = optimizer.state_dict()
+    loss = train_step(
+        net=net,
+        criterion=criterion,
+        optimizer=optimizer,
+        inputs=inputs,
+        target=target,
+        mask=True,
+    )
+    # Undo train step
+    soft_target = net(inputs, mask=True).detach()
+    soft_target = F.softmax(soft_target, dim=1)
+    net.load_state_dict(state_dict)
+    optimizer.load_state_dict(opt_state_dict)
+    # Train step without dropout on distilled target
+    loss = train_step(
+        net=net,
+        criterion=criterion,
+        optimizer=optimizer,
+        inputs=inputs,
+        target=soft_target,
+        mask=False,
+    )
+    return loss
+
+
