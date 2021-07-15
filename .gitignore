@@ -9,6 +9,7 @@ notebooks
 
 # Python garbage
 *.pyc
+*.swp
 
 # Models path
 models
