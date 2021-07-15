@@ -20,7 +20,7 @@ models_*
 data
 
 # Tensorboard logs path
-tensorboard_logs
+tensorboard_logs*
 
 # Misc folders
 docs
