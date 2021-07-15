@@ -5,7 +5,7 @@ from tqdm import tqdm
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 import pandas as pd
 from glob import glob
-from multiprocessing import Pool
+
 
 SCALAR_TAGS = [
     "train/crossentropy",

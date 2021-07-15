@@ -18,10 +18,24 @@ def get_training_method(name):
     """
     # Find the requested model by name
     cls_members = dict(inspect.getmembers(sys.modules[__name__]))
-    if name not in cls_members:
+    cls_members_norm = {k.lower(): v for k, v in cls_members.items()}
+    # If there has been a name collision, raise an exception
+    if len(cls_members_norm) < len(cls_members):
+        raise ValueError(
+            "Some of the training methods have the same name when "
+            "normalization is applied. This is not allowed."
+        )
+    # Find the requested method
+    if name not in cls_members_norm:
         raise ModuleNotFoundError(f"Function {name} not found in module {__name__}")
-    method = cls_members[name]
+    object = cls_members_norm[name]
 
+    # If the requested method is a class, instantiate it
+    if inspect.isclass(object):
+        method = object()
+    # If the requested method is a function, just return it
+    else:
+        method = object
     return method
 
 
@@ -111,7 +125,7 @@ def fulldistillation(net, criterion, optimizer, inputs, target):
     return loss
 
 
-def fulldistillation_reset(net, criterion, optimizer, inputs, target):
+def fulldistillationreset(net, criterion, optimizer, inputs, target):
     # Train step with dropout
     net.reset_masks()
     state_dict = net.state_dict()
@@ -141,3 +155,26 @@ def fulldistillation_reset(net, criterion, optimizer, inputs, target):
     return loss
 
 
+class AlternateSteps:
+    def __init__(self):
+        self.state = True
+
+    def toggle_state(self):
+        self.state = not self.state
+
+    def __call__(self, net, criterion, optimizer, inputs, target):
+        # Train step with dropout
+        if self.state:
+            net.reset_masks()
+        else:
+            net.invert_masks()
+        loss = train_step(
+            net=net,
+            criterion=criterion,
+            optimizer=optimizer,
+            inputs=inputs,
+            target=target,
+            mask=True,
+        )
+        self.toggle_state()
+        return loss
