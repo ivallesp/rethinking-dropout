@@ -1,4 +1,5 @@
 import argparse
+from setproctitle import setproctitle
 from src.data import get_dataset
 from src.models import get_model
 from src.runners import train
@@ -47,6 +48,7 @@ def main():
     model_name = args.model_name
     dataset_name = args.dataset_name
     random_seed = args.seed
+    setproctitle("python")
 
     # Set the random seed
     set_random_seed(random_seed)
