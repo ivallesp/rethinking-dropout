@@ -2,7 +2,7 @@ import argparse
 from src.data import get_dataset
 from src.models import get_model
 from src.runners import train
-from src.model_tools import set_random_seed, initialize_weights
+from src.model_tools import set_random_seed
 from src.paths import get_model_folder
 
 
@@ -12,11 +12,10 @@ TRAINING_METHODS = [
     "regular",
     "step",
     "distillation",
-    "fulldistillation",
-    "fulldistillation_reset",
+    "fulldistillation"
 ]
-
-KEEP_PROB_LEVELS = [0.8, 0.5, 0.3]
+TRAIN_BASELINE = True
+KEEP_PROB_LEVELS = [0.8, 0.5]
 
 
 def parse_args():
@@ -60,8 +59,9 @@ def main():
     # Generate experiments
     experiments = []
 
-    # Append the baseline (No dropout)
-    experiments.append((1.0, "regular"))
+    if TRAIN_BASELINE:
+        # Append the baseline (No dropout)
+        experiments.append((1.0, "regular"))
 
     for keep_prob_level in KEEP_PROB_LEVELS:
         for training_method in TRAINING_METHODS:
