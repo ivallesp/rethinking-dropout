@@ -34,8 +34,10 @@ COPY poetry.lock  pyproject.toml ./
 RUN poetry install
 
 # Copy the repository
+COPY .git .git
 COPY src src
 COPY main.py ./
-COPY .git .git
+COPY batch.sh ./
+RUN chmod 755 /app/batch.sh
 
-CMD bash
+ENTRYPOINT ["/app/batch.sh"]
