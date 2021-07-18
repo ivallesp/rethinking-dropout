@@ -71,10 +71,14 @@ def main():
 
     for i, (keep_prob_level, training_method) in enumerate(experiments):
         alias = f"{dataset_name}_{model_name}_{training_method}_{keep_prob_level}_{random_seed}"
-
         model_folder = get_model_folder(alias)
 
-        print(f"[EXPERIMENT {i+1}/{len(experiments)}] Training model: '{alias}'")
+        # If the training method is 'regular', double the epochs to match the training steps of other methods
+        n_epochs = N_EPOCHS if training_method != "regular" else N_EPOCHS * 2
+
+        print(
+            f"[EXPERIMENT {i+1}/{len(experiments)}] Training model: '{alias}' for {n_epochs} epochs."
+        )
 
         # Load model
         net, criterion, optimizer, lr_scheduler = get_model(
@@ -86,7 +90,7 @@ def main():
                 "p": keep_prob_level,
                 "device": DEVICE,
             },
-            n_epochs=N_EPOCHS,
+            n_epochs=n_epochs,
         )
 
         # Train and eval
@@ -98,7 +102,7 @@ def main():
             lr_scheduler=lr_scheduler,
             train_dataloader=train_dl,
             test_dataloader=test_dl,
-            n_epochs=N_EPOCHS,
+            n_epochs=n_epochs,
             device=DEVICE,
             save_path=model_folder,
             save_every_n_epochs=999999,
