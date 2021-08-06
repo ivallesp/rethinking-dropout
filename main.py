@@ -14,9 +14,10 @@ TRAINING_METHODS = [
     "step",
     "distillation",
     "fulldistillationreset",
+    "alternatesteps",
 ]
 TRAIN_BASELINE = True
-KEEP_PROB_LEVELS = [0.8, 0.5]
+KEEP_PROB_LEVELS = [0.8, 0.5, 0.3]
 
 
 def parse_args():
